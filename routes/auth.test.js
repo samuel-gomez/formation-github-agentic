@@ -42,7 +42,7 @@ describe('Auth rate limiter — limit exceeded', () => {
   const MAX = 2;
 
   test.each(ENDPOINTS)(
-    'POST $path — returns 429 after $MAX requests',
+    `POST $path — returns 429 after ${MAX} requests`,
     async ({ method, path }) => {
       const app = buildApp({ max: MAX, windowMs: 60_000 });
       for (let i = 0; i < MAX; i++) {
