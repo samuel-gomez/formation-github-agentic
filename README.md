@@ -7,6 +7,7 @@ Ce dépôt sert à simuler un cycle complet avec Copilot en mode agentic.
 
 ---
 
+<<<<<<< HEAD
 ## 🎯 Objectifs pédagogiques
 
 À l'issue de cet atelier, vous saurez :
@@ -193,3 +194,13 @@ Retry-After: <secondes>
 ```bash
 npm test
 ```
+
+---
+
+## 🧩 Exercice review #2
+Objectif : pratiquer le traitement des commentaires de revue dans une PR.
+
+### Étapes
+1. Lire les commentaires de review
+2. Corriger la documentation dans le périmètre demandé
+3. Mettre à jour la PR avec un résumé des changements
