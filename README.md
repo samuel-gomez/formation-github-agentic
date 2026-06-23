@@ -22,7 +22,7 @@ Les endpoints d'authentification (`/auth/*`) sont protégés par un rate limiter
 
 Quand la limite est dépassée, l'API retourne :
 
-```json
+~~~http
 HTTP 429 Too Many Requests
 Retry-After: <secondes>
 
@@ -31,7 +31,7 @@ Retry-After: <secondes>
   "message": "Rate limit exceeded. Try again in X second(s).",
   "retryAfter": 42
 }
-```
+~~~
 
 ## Démarrage
 
