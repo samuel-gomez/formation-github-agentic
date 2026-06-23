@@ -2,6 +2,9 @@
 
 > Atelier pratique — découvrir et maîtriser le **workflow agentic GitHub Copilot** en conditions réelles.
 
+## Objectif
+Ce dépôt sert à simuler un cycle complet avec Copilot en mode agentic.
+
 ---
 
 ## 🎯 Objectifs pédagogiques
