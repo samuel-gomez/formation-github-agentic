@@ -215,6 +215,11 @@ Objectif : pratiquer le traitement des commentaires de revue dans une PR.
 ## 🧩 Exercice blocage #3
 Objectif : pratiquer la gestion d'un agent bloqué ou hors périmètre.
 
+### Critères de done
+- [ ] Les corrections sont limitées à la section demandée dans `README.md`
+- [ ] `npm test` passe sans modification manuelle
+- [ ] La description de PR est mise à jour avec le résumé des corrections
+
 ### Scénario
 - L'agent modifie des sections non demandées du README.
 - Les changements répondent partiellement à la demande initiale.
@@ -222,4 +227,6 @@ Objectif : pratiquer la gestion d'un agent bloqué ou hors périmètre.
 ### Étapes proposées
 1. Demander un diagnostic structuré en 3 parties
 2. Choisir l'option de correction recommandée
-3. Appliquer uniquement la correction ciblée
+3. Valider que rien n'est cassé : `npm test`
+4. Appliquer uniquement la correction ciblée
+5. Mettre à jour la description de PR
