@@ -188,3 +188,26 @@ describe('Auth payload validation — empty payload', () => {
     },
   );
 });
+
+// ── P1: X-Response-Time-Ms value validation (positive number, 2 decimal places) ─
+
+describe('X-Response-Time-Ms header — value format', () => {
+  test.each(ENDPOINTS)(
+    'POST $path — X-Response-Time-Ms is a positive number with 2 decimal places',
+    async ({ method, path, validBody }) => {
+      const app = buildApp({ max: 5, windowMs: 60_000 });
+      const res = await request(app)[method](path).send(validBody);
+
+      const headerValue = res.headers['x-response-time-ms'];
+      expect(headerValue).toBeDefined();
+
+      // Must be parseable as a finite positive number
+      const parsed = parseFloat(headerValue);
+      expect(Number.isFinite(parsed)).toBe(true);
+      expect(parsed).toBeGreaterThanOrEqual(0);
+
+      // Must have exactly 2 decimal places (e.g. "1.23", "0.05")
+      expect(headerValue).toMatch(/^\d+\.\d{2}$/);
+    },
+  );
+});
