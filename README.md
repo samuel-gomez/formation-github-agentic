@@ -213,6 +213,29 @@ Retry-After: <secondes>
 
 ---
 
+## ✅ Validation des payloads `/auth/*`
+
+Les routes d'authentification valident désormais la présence/forme minimale des entrées :
+
+| Route | Payload attendu |
+|-------|-----------------|
+| `POST /auth/login` | `{ "username": "string", "password": "string" }` |
+| `POST /auth/reset-password` | `{ "email": "user@example.com" }` |
+| `POST /auth/verify-code` | `{ "code": "123456" }` (6 chiffres) |
+
+En cas d'entrée invalide :
+
+```http
+HTTP 400 Bad Request
+{
+  "error": "Bad Request",
+  "message": "<explication>",
+  "requestId": "<id>"
+}
+```
+
+---
+
 ## 🧪 Tests
 
 ```bash

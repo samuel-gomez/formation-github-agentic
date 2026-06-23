@@ -19,9 +19,24 @@ function buildApp(limiterConfig = {}) {
 }
 
 const ENDPOINTS = [
-  { method: 'post', path: '/auth/login' },
-  { method: 'post', path: '/auth/reset-password' },
-  { method: 'post', path: '/auth/verify-code' },
+  {
+    method: 'post',
+    path: '/auth/login',
+    validBody: { username: 'alice', password: 'secret-password' },
+    invalidBody: { username: 'alice' },
+  },
+  {
+    method: 'post',
+    path: '/auth/reset-password',
+    validBody: { email: 'alice@example.com' },
+    invalidBody: { email: 'invalid-email' },
+  },
+  {
+    method: 'post',
+    path: '/auth/verify-code',
+    validBody: { code: '123456' },
+    invalidBody: { code: '12A' },
+  },
 ];
 
 // ── Nominal: all requests under the limit succeed ────────────────────────────
@@ -31,10 +46,10 @@ describe('Auth rate limiter — nominal (under limit)', () => {
 
   test.each(ENDPOINTS)(
     `POST $path — all ${MAX} requests return 200`,
-    async ({ method, path }) => {
+    async ({ method, path, validBody }) => {
       const app = buildApp({ max: MAX, windowMs: 60_000 });
       for (let i = 0; i < MAX; i++) {
-        const res = await request(app)[method](path);
+        const res = await request(app)[method](path).send(validBody);
         expect(res.statusCode).toBe(200);
         expect(res.body.requestId).toBe('test-request-id');
       }
@@ -45,9 +60,9 @@ describe('Auth rate limiter — nominal (under limit)', () => {
 describe('Auth responses — request context', () => {
   test.each(ENDPOINTS)(
     'POST $path — keeps request id in header and response body',
-    async ({ method, path }) => {
+    async ({ method, path, validBody }) => {
       const app = buildApp({ max: 5, windowMs: 60_000 });
-      const res = await request(app)[method](path).set('x-request-id', 'auth-flow-777');
+      const res = await request(app)[method](path).set('x-request-id', 'auth-flow-777').send(validBody);
       expect(res.statusCode).toBe(200);
       expect(res.body.requestId).toBe('auth-flow-777');
       expect(res.headers['x-request-id']).toBe('auth-flow-777');
@@ -62,12 +77,12 @@ describe('Auth rate limiter — limit exceeded', () => {
 
   test.each(ENDPOINTS)(
     `POST $path — returns 429 after ${MAX} requests`,
-    async ({ method, path }) => {
+    async ({ method, path, validBody }) => {
       const app = buildApp({ max: MAX, windowMs: 60_000 });
       for (let i = 0; i < MAX; i++) {
-        await request(app)[method](path);
+        await request(app)[method](path).send(validBody);
       }
-      const res = await request(app)[method](path);
+      const res = await request(app)[method](path).send(validBody);
       expect(res.statusCode).toBe(429);
       expect(res.body).toMatchObject({
         error: 'Too Many Requests',
@@ -95,20 +110,20 @@ describe('Auth rate limiter — window reset', () => {
 
   test.each(ENDPOINTS)(
     'POST $path — returns 200 again after window expires',
-    async ({ method, path }) => {
+    async ({ method, path, validBody }) => {
       const app = buildApp({ max: MAX, windowMs: WINDOW_MS });
 
       // Exhaust the limit
       for (let i = 0; i < MAX; i++) {
-        await request(app)[method](path);
+        await request(app)[method](path).send(validBody);
       }
-      const blocked = await request(app)[method](path);
+      const blocked = await request(app)[method](path).send(validBody);
       expect(blocked.statusCode).toBe(429);
 
       // Advance fake clock past the window
       jest.advanceTimersByTime(WINDOW_MS + 1);
 
-      const recovered = await request(app)[method](path);
+      const recovered = await request(app)[method](path).send(validBody);
       expect(recovered.statusCode).toBe(200);
     },
   );
@@ -126,8 +141,25 @@ describe('Auth rate limiter — env var configuration', () => {
     process.env.RATE_LIMIT_MAX = '1';
     process.env.RATE_LIMIT_WINDOW_MS = '60000';
     const app = buildApp(); // no explicit config → reads env vars
-    await request(app).post('/auth/login');
-    const res = await request(app).post('/auth/login');
+    await request(app).post('/auth/login').send({ username: 'alice', password: 'secret-password' });
+    const res = await request(app).post('/auth/login').send({ username: 'alice', password: 'secret-password' });
     expect(res.statusCode).toBe(429);
   });
+});
+
+describe('Auth payload validation', () => {
+  test.each(ENDPOINTS)(
+    'POST $path — returns 400 for invalid payload',
+    async ({ method, path, invalidBody }) => {
+      const app = buildApp({ max: 5, windowMs: 60_000 });
+      const res = await request(app)[method](path).send(invalidBody);
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toMatchObject({
+        error: 'Bad Request',
+        message: expect.any(String),
+        requestId: 'test-request-id',
+      });
+      expect(res.headers['x-request-id']).toBe('test-request-id');
+    },
+  );
 });
