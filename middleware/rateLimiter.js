@@ -14,8 +14,8 @@ function createRateLimiter({
   const store = new Map();
 
   function rateLimiter(req, res, next) {
-    const key = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    const now = Date.now();
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    const key = `${req.baseUrl ?? ''}${req.path ?? ''}:${ip}`;
     const entry = store.get(key);
 
     if (!entry || now >= entry.resetTime) {
