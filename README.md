@@ -7,7 +7,6 @@ Ce dépôt sert à simuler un cycle complet avec Copilot en mode agentic.
 
 ---
 
-<<<<<<< HEAD
 ## 🎯 Objectifs pédagogiques
 
 À l'issue de cet atelier, vous saurez :
