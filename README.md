@@ -155,11 +155,36 @@ Avant d'approuver une PR générée par un agent :
 
 | Méthode | Route | Description |
 |---------|-------|-------------|
-| GET | `/health` | Retourne `{"status":"ok"}` |
-| GET | `/version` | Retourne la version depuis `package.json` |
+| GET | `/health` | Retourne `status`, `requestId`, `timestamp` |
+| GET | `/version` | Retourne `version` et `requestId` |
 | POST | `/auth/login` | Authentification (rate limité) |
 | POST | `/auth/reset-password` | Réinitialisation de mot de passe (rate limité) |
 | POST | `/auth/verify-code` | Vérification de code (rate limité) |
+
+---
+
+## 🔎 Traçabilité des requêtes
+
+L'API expose un `requestId` pour faciliter le suivi des logs :
+
+- Si le client envoie `x-request-id`, la valeur est réutilisée.
+- Sinon, l'API génère un identifiant unique.
+- La réponse inclut toujours l'en-tête `X-Request-Id`.
+
+Exemple :
+
+```http
+GET /health
+X-Request-Id: training-id-001
+```
+
+```json
+{
+  "status": "ok",
+  "requestId": "training-id-001",
+  "timestamp": "2026-06-23T13:00:00.000Z"
+}
+```
 
 ---
 

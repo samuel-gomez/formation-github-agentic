@@ -9,6 +9,11 @@ const createAuthRouter = require('../routes/auth');
 function buildApp(limiterConfig = {}) {
   const app = express();
   app.use(express.json());
+  app.use((req, res, next) => {
+    req.requestId = req.get('x-request-id') ?? 'test-request-id';
+    res.set('X-Request-Id', req.requestId);
+    next();
+  });
   app.use('/auth', createAuthRouter(limiterConfig));
   return app;
 }
@@ -31,7 +36,21 @@ describe('Auth rate limiter — nominal (under limit)', () => {
       for (let i = 0; i < MAX; i++) {
         const res = await request(app)[method](path);
         expect(res.statusCode).toBe(200);
+        expect(res.body.requestId).toBe('test-request-id');
       }
+    },
+  );
+});
+
+describe('Auth responses — request context', () => {
+  test.each(ENDPOINTS)(
+    'POST $path — keeps request id in header and response body',
+    async ({ method, path }) => {
+      const app = buildApp({ max: 5, windowMs: 60_000 });
+      const res = await request(app)[method](path).set('x-request-id', 'auth-flow-777');
+      expect(res.statusCode).toBe(200);
+      expect(res.body.requestId).toBe('auth-flow-777');
+      expect(res.headers['x-request-id']).toBe('auth-flow-777');
     },
   );
 });
@@ -55,6 +74,7 @@ describe('Auth rate limiter — limit exceeded', () => {
         retryAfter: expect.any(Number),
       });
       expect(res.headers['retry-after']).toBeDefined();
+      expect(res.headers['x-request-id']).toBeDefined();
     },
   );
 });
