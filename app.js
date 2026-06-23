@@ -1,6 +1,7 @@
 const express = require('express');
 const { version } = require('./package.json');
 const createAuthRouter = require('./routes/auth');
+const attachRequestContext = require('./middleware/requestContext');
 
 const app = express();
 
@@ -12,13 +13,21 @@ if (trustProxy !== 'false') {
 }
 
 app.use(express.json());
+app.use(attachRequestContext);
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+  res.json({
+    status: 'ok',
+    requestId: req.requestId,
+    timestamp: new Date().toISOString(),
+  });
 });
 
 app.get('/version', (req, res) => {
-  res.json({ version });
+  res.json({
+    version,
+    requestId: req.requestId,
+  });
 });
 
 app.use('/auth', createAuthRouter());
