@@ -1,0 +1,86 @@
+name: "🧩 Exercice atelier"
+description: "Créer un exercice standardisé pour l'atelier workflow agentic"
+title: "[Exercice] "
+labels: ["atelier", "exercice"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Utilisez ce template pour proposer un exercice à réaliser avec GitHub Copilot en mode agentic.
+        Soyez précis : un bon prompt = un bon exercice.
+
+  - type: input
+    id: titre
+    attributes:
+      label: "Titre de l'exercice"
+      description: "Court et actionnable (ex: Ajouter un endpoint GET /ping)"
+      placeholder: "Ajouter..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: contexte
+    attributes:
+      label: "📋 Contexte"
+      description: "Décrivez l'état actuel du code concerné par cet exercice."
+      placeholder: |
+        Le fichier app.js contient actuellement les routes /health et /version.
+        Il n'y a pas encore de middleware de logging.
+    validations:
+      required: true
+
+  - type: textarea
+    id: objectif
+    attributes:
+      label: "🎯 Objectif"
+      description: "Que doit faire le participant à l'issue de cet exercice ?"
+      placeholder: |
+        Ajouter un middleware Express qui logue method + path + status code
+        pour chaque requête.
+    validations:
+      required: true
+
+  - type: textarea
+    id: prompt
+    attributes:
+      label: "💬 Prompt suggéré pour Copilot"
+      description: "Rédigez le prompt que le participant devra soumettre à l'agent."
+      placeholder: |
+        Dans ce repo Express, ajoute un middleware de logging qui affiche
+        `METHOD /path → STATUS` pour chaque requête.
+        Ajoute le test associé. Ne modifie pas les routes existantes.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: criteres
+    attributes:
+      label: "✅ Critères de validation"
+      description: "Comment savoir que l'exercice est réussi ?"
+      placeholder: |
+        - [ ] `npm test` passe sans modification manuelle
+        - [ ] Le middleware est appliqué avant les routes
+        - [ ] Un test vérifie la présence du log
+    validations:
+      required: true
+
+  - type: dropdown
+    id: difficulte
+    attributes:
+      label: "📊 Difficulté"
+      options:
+        - "⭐ Débutant — route simple ou test unitaire"
+        - "⭐⭐ Intermédiaire — middleware, refacto, plusieurs fichiers"
+        - "⭐⭐⭐ Avancé — architecture, sécurité, performance"
+    validations:
+      required: true
+
+  - type: textarea
+    id: risques
+    attributes:
+      label: "⚠️ Points de vigilance"
+      description: "Quels pièges ou effets de bord l'agent pourrait-il introduire ?"
+      placeholder: |
+        - L'agent pourrait modifier les routes existantes
+        - Attention aux imports circulaires

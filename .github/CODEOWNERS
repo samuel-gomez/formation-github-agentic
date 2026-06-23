@@ -1,0 +1,5 @@
+# CODEOWNERS
+# Chaque PR doit être approuvée par au moins un formateur.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @samuel-gomez
