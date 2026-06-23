@@ -1,6 +1,7 @@
 const request = require('supertest');
 const express = require('express');
 const createAuthRouter = require('../routes/auth');
+const createResponseTime = require('../middleware/responseTime');
 
 /**
  * Builds a minimal Express app with a fresh auth router for each test.
@@ -14,6 +15,7 @@ function buildApp(limiterConfig = {}) {
     res.set('X-Request-Id', req.requestId);
     next();
   });
+  app.use(createResponseTime());
   app.use('/auth', createAuthRouter(limiterConfig));
   return app;
 }
@@ -52,6 +54,7 @@ describe('Auth rate limiter — nominal (under limit)', () => {
         const res = await request(app)[method](path).send(validBody);
         expect(res.statusCode).toBe(200);
         expect(res.body.requestId).toBe('test-request-id');
+        expect(res.headers['x-response-time-ms']).toMatch(/^\d+\.\d{2}$/);
       }
     },
   );
@@ -66,6 +69,7 @@ describe('Auth responses — request context', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.requestId).toBe('auth-flow-777');
       expect(res.headers['x-request-id']).toBe('auth-flow-777');
+      expect(res.headers['x-response-time-ms']).toMatch(/^\d+\.\d{2}$/);
     },
   );
 });
@@ -90,6 +94,7 @@ describe('Auth rate limiter — limit exceeded', () => {
       });
       expect(res.headers['retry-after']).toBeDefined();
       expect(res.headers['x-request-id']).toBeDefined();
+      expect(res.headers['x-response-time-ms']).toMatch(/^\d+\.\d{2}$/);
     },
   );
 });
@@ -160,6 +165,7 @@ describe('Auth payload validation', () => {
         requestId: 'test-request-id',
       });
       expect(res.headers['x-request-id']).toBe('test-request-id');
+      expect(res.headers['x-response-time-ms']).toMatch(/^\d+\.\d{2}$/);
     },
   );
 });
@@ -179,6 +185,19 @@ describe('Auth payload validation — empty payload', () => {
         requestId: expect.any(String),
       });
       expect(res.headers['x-request-id']).toBeDefined();
+    },
+  );
+});
+
+// ── X-Response-Time-Ms: format on all endpoints ──────────────────────────────
+
+describe('X-Response-Time-Ms header — value format', () => {
+  test.each(ENDPOINTS)(
+    'POST $path — X-Response-Time-Ms is a positive number with 2 decimal places',
+    async ({ method, path, validBody }) => {
+      const app = buildApp({ max: 5, windowMs: 60_000 });
+      const res = await request(app)[method](path).send(validBody);
+      expect(res.headers['x-response-time-ms']).toMatch(/^\d+\.\d{2}$/);
     },
   );
 });

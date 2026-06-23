@@ -3,6 +3,7 @@ const { version } = require('./package.json');
 const createAuthRouter = require('./routes/auth');
 const attachRequestContext = require('./middleware/requestContext');
 const createRequestLogger = require('./middleware/requestLogger');
+const createResponseTime = require('./middleware/responseTime');
 
 const app = express();
 
@@ -16,6 +17,7 @@ if (trustProxy !== 'false') {
 app.use(express.json());
 app.use(attachRequestContext);
 app.use(createRequestLogger());
+app.use(createResponseTime());
 
 app.get('/health', (req, res) => {
   res.json({
