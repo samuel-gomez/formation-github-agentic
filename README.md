@@ -190,6 +190,8 @@ Retry-After: <secondes>
 
 ## 🧪 Tests
 
+## 🧪 Tests
+
 ```bash
 npm test
 ```
