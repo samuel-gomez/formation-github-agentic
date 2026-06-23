@@ -166,8 +166,9 @@ Les endpoints `/auth/*` sont protégés par un rate limiter in-memory configurab
 
 | Variable d'environnement | Description | Défaut |
 |--------------------------|-------------|--------|
-| `RATE_LIMIT_WINDOW_MS` | Durée de la fenêtre glissante (ms) | `900000` (15 min) |
+| `RATE_LIMIT_WINDOW_MS` | Durée de la fenêtre fixe (ms) | `900000` (15 min) |
 | `RATE_LIMIT_MAX` | Nombre max de requêtes par fenêtre et par IP | `5` |
+| `TRUST_PROXY` | Valeur Express `trust proxy` pour un déploiement derrière reverse proxy (`false` pour désactiver) | `1` |
 
 Réponse en cas de dépassement :
 
@@ -189,4 +190,3 @@ Retry-After: <secondes>
 ```bash
 npm test
 ```
-
