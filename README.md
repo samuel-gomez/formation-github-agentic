@@ -209,3 +209,17 @@ Objectif : pratiquer le traitement des commentaires de revue dans une PR.
 2. Corriger la documentation dans le périmètre demandé
 3. Valider que rien n'est cassé : `npm test`
 4. Mettre à jour la PR avec un résumé des changements
+
+---
+
+## 🧩 Exercice blocage #3
+Objectif : pratiquer la gestion d'un agent bloqué ou hors périmètre.
+
+### Scénario
+- L'agent modifie des sections non demandées du README.
+- Les changements répondent partiellement à la demande initiale.
+
+### Étapes proposées
+1. Demander un diagnostic structuré en 3 parties
+2. Choisir l'option de correction recommandée
+3. Appliquer uniquement la correction ciblée
