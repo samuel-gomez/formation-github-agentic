@@ -19,6 +19,7 @@ Les endpoints d'authentification (`/auth/*`) sont protégés par un rate limiter
 |--------------------------|-------------|--------|
 | `RATE_LIMIT_WINDOW_MS` | Durée de la fenêtre fixe (ms) | `900000` (15 min) |
 | `RATE_LIMIT_MAX` | Nombre max de requêtes par fenêtre et par IP | `5` |
+| `TRUST_PROXY` | Mettre à `false` pour désactiver le `trust proxy` Express (utile si l'app tourne sans reverse proxy) | activé (1 hop) |
 
 Quand la limite est dépassée, l'API retourne :
 
