@@ -17,7 +17,6 @@ function createAuthRouter(limiterConfig = {}) {
     res.status(200).json({ message: 'Code verified' });
   });
 
-  router._limiter = authLimiter;
   return router;
 }
 
