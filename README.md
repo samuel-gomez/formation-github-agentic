@@ -171,7 +171,7 @@ Les endpoints `/auth/*` sont protégés par un rate limiter in-memory configurab
 
 Réponse en cas de dépassement :
 
-```json
+```http
 HTTP 429 Too Many Requests
 Retry-After: <secondes>
 
