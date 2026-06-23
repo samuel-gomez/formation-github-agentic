@@ -227,12 +227,16 @@ En cas d'entrée invalide :
 
 ```http
 HTTP 400 Bad Request
+X-Request-Id: <id>
+
 {
   "error": "Bad Request",
   "message": "<explication>",
   "requestId": "<id>"
 }
 ```
+
+> Le header `X-Request-Id` est toujours présent sur les réponses d'erreur (400, 429) pour faciliter la corrélation des logs côté support.
 
 ---
 

@@ -163,3 +163,22 @@ describe('Auth payload validation', () => {
     },
   );
 });
+
+// ── Edge case: empty payload returns 400 on every auth endpoint ───────────────
+
+describe('Auth payload validation — empty payload', () => {
+  test.each(ENDPOINTS)(
+    'POST $path — returns 400 for empty payload',
+    async ({ method, path }) => {
+      const app = buildApp({ max: 5, windowMs: 60_000 });
+      const res = await request(app)[method](path).send({});
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toMatchObject({
+        error: 'Bad Request',
+        message: expect.any(String),
+        requestId: expect.any(String),
+      });
+      expect(res.headers['x-request-id']).toBeDefined();
+    },
+  );
+});

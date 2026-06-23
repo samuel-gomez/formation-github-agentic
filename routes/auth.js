@@ -6,7 +6,8 @@ function isNonEmptyString(value) {
 }
 
 function isValidEmail(value) {
-  return isNonEmptyString(value) && value.includes('@');
+  // Minimal format: non-empty local part + @ + domain with at least one dot
+  return isNonEmptyString(value) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
 function isValidCode(value) {
@@ -27,8 +28,8 @@ function createAuthRouter(limiterConfig = {}) {
   };
 
   router.post('/login', authLimiter, (req, res) => {
-    const username = req.body?.username;
-    const password = req.body?.password;
+    const username = req.body?.username?.trim?.() ?? req.body?.username;
+    const password = req.body?.password?.trim?.() ?? req.body?.password;
     if (!isNonEmptyString(username) || !isNonEmptyString(password)) {
       return badRequest(req, res, 'username and password are required');
     }
@@ -37,7 +38,7 @@ function createAuthRouter(limiterConfig = {}) {
   });
 
   router.post('/reset-password', authLimiter, (req, res) => {
-    const email = req.body?.email;
+    const email = req.body?.email?.trim?.() ?? req.body?.email;
     if (!isValidEmail(email)) {
       return badRequest(req, res, 'email must be a valid address');
     }
@@ -46,7 +47,7 @@ function createAuthRouter(limiterConfig = {}) {
   });
 
   router.post('/verify-code', authLimiter, (req, res) => {
-    const code = req.body?.code;
+    const code = req.body?.code?.trim?.() ?? req.body?.code;
     if (!isValidCode(code)) {
       return badRequest(req, res, 'code must be a 6-digit string');
     }
