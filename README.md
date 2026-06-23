@@ -193,3 +193,19 @@ Retry-After: <secondes>
 ```bash
 npm test
 ```
+
+---
+
+## 🧩 Exercice review #2
+Objectif : pratiquer le traitement des commentaires de revue dans une PR.
+
+### Critères de done
+- [ ] Tous les commentaires inline sont traités et résolus
+- [ ] Aucun fichier hors `README.md` n'a été modifié
+- [ ] La description de PR est mise à jour avec le résumé des corrections
+
+### Étapes
+1. Lire les commentaires de review
+2. Corriger la documentation dans le périmètre demandé
+3. Valider que rien n'est cassé : `npm test`
+4. Mettre à jour la PR avec un résumé des changements
