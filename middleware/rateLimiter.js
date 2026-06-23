@@ -38,8 +38,6 @@ function createRateLimiter({
     return next();
   }
 
-  // Exposed for testing
-  rateLimiter._store = store;
   return rateLimiter;
 }
 
