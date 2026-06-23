@@ -11,8 +11,7 @@ describe('GET /health', () => {
       requestId: expect.any(String),
     });
     expect(res.headers['x-request-id']).toBe(res.body.requestId);
-    expect(res.headers['x-response-time-ms']).toBeDefined();
-    expect(Number(res.headers['x-response-time-ms'])).toBeGreaterThanOrEqual(0);
+    expect(res.headers['x-response-time-ms']).toMatch(/^\d+\.\d{2}$/);
   });
 
   it('should reuse inbound x-request-id header', async () => {
@@ -20,7 +19,7 @@ describe('GET /health', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.requestId).toBe('training-id-001');
     expect(res.headers['x-request-id']).toBe('training-id-001');
-    expect(res.headers['x-response-time-ms']).toBeDefined();
+    expect(res.headers['x-response-time-ms']).toMatch(/^\d+\.\d{2}$/);
   });
 });
 
@@ -33,6 +32,6 @@ describe('GET /version', () => {
       requestId: expect.any(String),
     });
     expect(res.headers['x-request-id']).toBe(res.body.requestId);
-    expect(res.headers['x-response-time-ms']).toBeDefined();
+    expect(res.headers['x-response-time-ms']).toMatch(/^\d+\.\d{2}$/);
   });
 });
