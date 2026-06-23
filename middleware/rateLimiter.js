@@ -22,6 +22,7 @@ function createRateLimiter(options = {}) {
   function rateLimiter(req, res, next) {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     const key = `${req.baseUrl ?? ''}${req.path ?? ''}:${ip}`;
+    const now = Date.now();
     const entry = store.get(key);
 
     if (!entry || now >= entry.resetTime) {
