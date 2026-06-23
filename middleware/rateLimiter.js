@@ -7,10 +7,16 @@
  *   RATE_LIMIT_MAX        — max requests per window per IP (default: 5)
  */
 
-function createRateLimiter({
-  windowMs = parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 900_000,
-  max = parseInt(process.env.RATE_LIMIT_MAX, 10) || 5,
-} = {}) {
+function createRateLimiter(options = {}) {
+  const envWindowMs = Number.parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10);
+  const envMax = Number.parseInt(process.env.RATE_LIMIT_MAX, 10);
+
+  const windowMsRaw = options.windowMs ?? (Number.isFinite(envWindowMs) ? envWindowMs : 900_000);
+  const maxRaw = options.max ?? (Number.isFinite(envMax) ? envMax : 5);
+
+  const windowMs = Number.isFinite(windowMsRaw) && windowMsRaw > 0 ? windowMsRaw : 900_000;
+  const max = Number.isFinite(maxRaw) && maxRaw > 0 ? maxRaw : 5;
+
   const store = new Map();
 
   function rateLimiter(req, res, next) {
