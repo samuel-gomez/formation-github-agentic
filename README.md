@@ -138,10 +138,12 @@ Avant d'approuver une PR générée par un agent :
 ├── app.test.js                   # Tests /health et /version
 ├── index.js                      # Point d'entrée (serveur)
 ├── middleware/
-│   └── rateLimiter.js            # Rate limiter in-memory
+│   ├── rateLimiter.js            # Rate limiter in-memory
+│   ├── requestContext.js         # Génération/propagation du requestId
+│   └── requestLogger.js          # Logger JSON structuré par requête
 ├── routes/
 │   ├── auth.js                   # Routes /auth/* (login, reset, verify)
-│   └── auth.test.js              # Tests rate limiting
+│   └── auth.test.js              # Tests rate limiting + validation
 └── .github/
     ├── CODEOWNERS                # Revue obligatoire
     ├── pull_request_template.md  # Template de PR
@@ -151,7 +153,30 @@ Avant d'approuver une PR générée par un agent :
 
 ---
 
-## 🌐 API
+## 📋 Logging
+
+Chaque requête est loguée sur `stdout` au format JSON à la fin de la réponse :
+
+```json
+{
+  "timestamp": "2026-06-23T14:00:00.000Z",
+  "method": "POST",
+  "path": "/auth/login",
+  "statusCode": 200,
+  "duration": 4,
+  "requestId": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+| Champ | Description |
+|-------|-------------|
+| `timestamp` | Horodatage ISO 8601 de fin de réponse |
+| `method` | Méthode HTTP |
+| `path` | Chemin de la route |
+| `statusCode` | Code HTTP retourné |
+| `duration` | Durée de traitement en millisecondes |
+| `requestId` | Identifiant de corrélation (voir `X-Request-Id`), `null` si absent |
+
 
 | Méthode | Route | Description |
 |---------|-------|-------------|
