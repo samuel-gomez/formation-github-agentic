@@ -25,7 +25,7 @@ describe('Auth rate limiter — nominal (under limit)', () => {
   const MAX = 3;
 
   test.each(ENDPOINTS)(
-    'POST $path — all $MAX requests return 200',
+    `POST $path — all ${MAX} requests return 200`,
     async ({ method, path }) => {
       const app = buildApp({ max: MAX, windowMs: 60_000 });
       for (let i = 0; i < MAX; i++) {
