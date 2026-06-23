@@ -3,7 +3,7 @@
  * Each call creates an isolated store — safe to use across multiple routes.
  *
  * Config (via environment variables, overridable via options):
- *   RATE_LIMIT_WINDOW_MS  — sliding window duration in ms (default: 900000 = 15 min)
+ *   RATE_LIMIT_WINDOW_MS  — fixed window duration in ms (default: 900000 = 15 min)
  *   RATE_LIMIT_MAX        — max requests per window per IP (default: 5)
  */
 
