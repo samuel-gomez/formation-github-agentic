@@ -19,7 +19,7 @@ Les endpoints d'authentification (`/auth/*`) sont protégés par un rate limiter
 |--------------------------|-------------|--------|
 | `RATE_LIMIT_WINDOW_MS` | Durée de la fenêtre fixe (ms) | `900000` (15 min) |
 | `RATE_LIMIT_MAX` | Nombre max de requêtes par fenêtre et par IP | `5` |
-| `TRUST_PROXY` | Valeur Express [`trust proxy`](https://expressjs.com/en/guide/behind-proxies.html) (ex: `1`, `loopback`) — mettre à `false` pour désactiver. Requis derrière un reverse proxy pour que `req.ip` reflète l'IP du client réel. | activé (1 hop) |
+| `TRUST_PROXY` | Mettre à `false` pour désactiver le `trust proxy` Express | activé (1 hop) |
 
 Quand la limite est dépassée, l'API retourne :
 
