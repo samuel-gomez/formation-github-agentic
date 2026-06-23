@@ -195,7 +195,7 @@ L'API expose un `requestId` pour faciliter le suivi des logs :
 - Si le client envoie `x-request-id`, la valeur est réutilisée.
 - Sinon, l'API génère un identifiant unique.
 - La réponse inclut toujours l'en-tête `X-Request-Id`.
-- La réponse inclut aussi `X-Response-Time-Ms` (latence de traitement côté API).
+- La réponse inclut aussi `X-Response-Time-Ms` : latence de traitement en **millisecondes**, avec **2 décimales** (ex: `12.34`). Calculé via `process.hrtime.bigint()` pour une précision nanoseconde.
 
 Exemple :
 
