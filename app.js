@@ -19,7 +19,6 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     requestId: req.requestId,
-    timestamp: new Date().toISOString(),
   });
 });
 

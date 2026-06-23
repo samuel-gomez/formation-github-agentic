@@ -74,6 +74,7 @@ describe('Auth rate limiter — limit exceeded', () => {
         retryAfter: expect.any(Number),
       });
       expect(res.headers['retry-after']).toBeDefined();
+      expect(res.headers['x-request-id']).toBeDefined();
     },
   );
 });

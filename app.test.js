@@ -9,7 +9,6 @@ describe('GET /health', () => {
     expect(res.body).toMatchObject({
       status: 'ok',
       requestId: expect.any(String),
-      timestamp: expect.any(String),
     });
     expect(res.headers['x-request-id']).toBe(res.body.requestId);
   });

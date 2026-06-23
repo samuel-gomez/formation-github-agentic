@@ -1,7 +1,13 @@
 const { randomUUID } = require('crypto');
 
+const MAX_REQUEST_ID_LENGTH = 128;
+
 function resolveRequestId(rawRequestId) {
-  if (typeof rawRequestId === 'string' && rawRequestId.trim() !== '') {
+  if (
+    typeof rawRequestId === 'string' &&
+    rawRequestId.trim() !== '' &&
+    rawRequestId.trim().length <= MAX_REQUEST_ID_LENGTH
+  ) {
     return rawRequestId.trim();
   }
 
